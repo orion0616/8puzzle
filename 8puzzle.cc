@@ -49,11 +49,11 @@ public:
                 this->beforeAction = x.beforeAction;
                 return *this;
         }
+        bool operator>(const Node& y)const{
+                return this->evalF() > y.evalF();
+        }
 };
 
-bool operator>(const Node& x,const Node& y){
-        return x.evalF() > y.evalF();
-}
 
 int h1(Node n){
         int count = 0;
@@ -191,7 +191,7 @@ bool isGoal(Node n){
 priority_queue<Node, vector<Node>, greater<Node> > openList;
 vector<Node*> closedList;
 
-void search(Node& n){
+void addchild(Node& n){
         pair<int,int> empty = whereEmpty(n);
         int emptyI = empty.first;
         int emptyJ = empty.second;
@@ -278,7 +278,7 @@ void astar(Node& n){
                         return;
                 }
                 else{
-                        search(*node);
+                        addchild(*node);
                 }
         }
         return;
@@ -309,19 +309,17 @@ void createProblems(int num){
         return;
 }
 
-
 int main(){
-        cout << h1(sample) << endl;
         createProblems(100);
         struct timeval t0, t1;
         for(int i=0;i<100;i++){
-                cout << "start solving" << endl;
+                // cout << "start solving" << endl;
                 gettimeofday(&t0, NULL);
                 astar(problems[i]);
                 gettimeofday(&t1, NULL);
                 printTime(t0,t1);
-                cout << "end solving" << endl;
-                cout << "the number of nodes is " << closedList.size() << " " << openList.size() << endl;
+                // cout << "end solving" << endl;
+                // cout << "the number of nodes is " << closedList.size() << " " << openList.size() << endl;
                 Node* nP;
                 while(!closedList.empty()){
                         nP = closedList[closedList.size()-1];
