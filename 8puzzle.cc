@@ -21,7 +21,8 @@ public:
                 }
                 parentNode = NULL;
         }
-        ~Node(){};
+        ~Node(){
+        };
         Node(const Node& n){
                 for(int i=0;i<3;i++){
                         for(int j=0;j<3;j++)
@@ -105,7 +106,7 @@ int Node::stateToInt()const{
         return state[0][0]*100000000 + state[0][1]*10000000 + state[0][2]*1000000 + state[1][0]*100000 + state[1][1]*10000 + state[1][2]*1000 +state[2][0]*100 + state[2][1]*10 +state[2][2];
 }
 
-pair<int,int> whereEmpty(const Node n){
+pair<int,int> whereEmpty(Node n){
         int emptyI,emptyJ;
         for(int i=0;i<3;i++){
                 for(int j=0;j<3;j++){
@@ -206,8 +207,8 @@ bool isGoal(Node n){
 }
 
 BinaryHeap<Node> openList;
-map<int,Node> closedList;
-map<int,Node>::iterator it;
+map<int,Node*> closedList;
+map<int,Node*>::iterator it;
 
 void printState(Node n){
         for(int i=0;i<3;i++){
@@ -230,8 +231,8 @@ void pushToOpenList(const Node& n){
         }
         //the same state in closedList;
         else if((it = closedList.find(n.stateToInt())) != closedList.end()){
-                if((*it).second.pathCost() > n.pathCost()){
-                        (*it).second.parentNode = n.parentNode;
+                if((*it).second->pathCost() > n.pathCost()){
+                        (*it).second->parentNode = n.parentNode;
                 }
                 return;
         }
@@ -321,7 +322,7 @@ void astar(Node& n){
         while(!openList.empty()){
                 node = new Node(openList.findMin());
                 openList.remove();
-                closedList[node->stateToInt()] = *node;
+                closedList[node->stateToInt()] = node;
                 if(isGoal(*node)){
                         printResult(*node);
                         return;
@@ -371,6 +372,12 @@ int main(){
                         openList.remove();
                 }
                 Node* nP;
+                for(it = closedList.begin();it!=closedList.end();it++){
+                        if((*it).second != NULL){
+                                delete (*it).second;
+                                (*it).second = NULL;
+                        }
+                }
                 closedList.clear();
         }
 }
