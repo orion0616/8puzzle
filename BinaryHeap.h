@@ -124,7 +124,7 @@ BinaryHeap<T>::~BinaryHeap() {
 
 template<class T>
 int BinaryHeap<T>::find(T x){
-	for(int i=0;i<a.size();i++){
+	for(int i=0,n=a.size();i<n;i++){
 		if(a[i] == x)
 			return i;
 	}

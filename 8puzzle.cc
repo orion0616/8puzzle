@@ -203,7 +203,7 @@ BinaryHeap<Node> openList;
 vector<Node*> closedList;
 
 int findClosedList(Node n){
-        for(int i=0;i<closedList.size();i++){
+        for(int i=0,num=closedList.size();i<num;i++){
                 if(n == *closedList[i])
                         return i;
         }
@@ -219,7 +219,7 @@ void printState(Node n){
         }
 }
 
-void pushToOpenList(Node n){
+void pushToOpenList(const Node& n){
         int num;
         //the same state in openList
         if((num = openList.find(n)) != -1){
