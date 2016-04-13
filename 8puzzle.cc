@@ -7,6 +7,7 @@
 #include <random>
 #include <sys/time.h>
 #include <unistd.h>
+#include <map>
 #include "BinaryHeap.h"
 
 using namespace std;
@@ -30,6 +31,7 @@ public:
                 beforeAction = n.beforeAction;
         }
         int state[3][3];
+        int stateToInt()const;
         int pathCost()const{
                 if(parentNode == NULL)
                         return 0;
@@ -97,6 +99,10 @@ int h2(Node n){
 
 int Node::heuristic()const{
         return h2(*this);
+}
+
+int Node::stateToInt()const{
+        return state[0][0]*100000000 + state[0][1]*10000000 + state[0][2]*1000000 + state[1][0]*100000 + state[1][1]*10000 + state[1][2]*1000 +state[2][0]*100 + state[2][1]*10 +state[2][2];
 }
 
 pair<int,int> whereEmpty(const Node n){
@@ -200,15 +206,8 @@ bool isGoal(Node n){
 }
 
 BinaryHeap<Node> openList;
-vector<Node*> closedList;
-
-int findClosedList(Node n){
-        for(int i=0,num=closedList.size();i<num;i++){
-                if(n == *closedList[i])
-                        return i;
-        }
-        return -1;
-}
+map<int,Node> closedList;
+map<int,Node>::iterator it;
 
 void printState(Node n){
         for(int i=0;i<3;i++){
@@ -221,7 +220,7 @@ void printState(Node n){
 
 void pushToOpenList(const Node& n){
         int num;
-        //the same state in openList
+        // the same state in openList
         if((num = openList.find(n)) != -1){
                 if(openList.a[num].pathCost() > n.pathCost()){
                         openList.a[num].parentNode = n.parentNode;
@@ -230,9 +229,9 @@ void pushToOpenList(const Node& n){
                 return;
         }
         //the same state in closedList;
-        else if((num = findClosedList(n)) != -1){
-                if(closedList[num]->pathCost() > n.pathCost()){
-                        closedList[num]->parentNode = n.parentNode;
+        else if((it = closedList.find(n.stateToInt())) != closedList.end()){
+                if((*it).second.pathCost() > n.pathCost()){
+                        (*it).second.parentNode = n.parentNode;
                 }
                 return;
         }
@@ -322,7 +321,7 @@ void astar(Node& n){
         while(!openList.empty()){
                 node = new Node(openList.findMin());
                 openList.remove();
-                closedList.push_back(node);
+                closedList[node->stateToInt()] = *node;
                 if(isGoal(*node)){
                         printResult(*node);
                         return;
@@ -372,13 +371,6 @@ int main(){
                         openList.remove();
                 }
                 Node* nP;
-                while(!closedList.empty()){
-                        nP = closedList[closedList.size()-1];
-                        if(nP != NULL){
-                                delete nP;
-                                nP = NULL;
-                        }
-                        closedList.pop_back();
-                }
+                closedList.clear();
         }
 }
