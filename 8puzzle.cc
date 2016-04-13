@@ -343,11 +343,53 @@ void createProblems(int num){
 
 
 int main(){
+        Node testcase;
+        testcase = moveDown(testcase);
+        testcase = moveRight(testcase);
+        testcase = moveRight(testcase);
+        testcase = moveUp(testcase);
+        testcase = moveLeft(testcase);
+        testcase = moveLeft(testcase);
+        testcase = moveDown(testcase);
+        testcase = moveDown(testcase);
+        testcase = moveRight(testcase);
+        testcase = moveUp(testcase);
+        testcase = moveUp(testcase);
+        testcase = moveLeft(testcase);
+        testcase = moveDown(testcase);
+        testcase = moveDown(testcase);
+        testcase = moveRight(testcase);
+        testcase = moveUp(testcase);
+        testcase = moveRight(testcase);
+        testcase = moveDown(testcase);
+        testcase = moveLeft(testcase);
+        testcase = moveUp(testcase);
+        testcase = moveRight(testcase);
+        testcase = moveUp(testcase);
+        testcase = moveLeft(testcase);
+        testcase = moveDown(testcase);
+        testcase = moveLeft(testcase);
+        testcase = moveDown(testcase);
+        testcase = moveRight(testcase);
+        testcase = moveRight(testcase);
+        testcase = moveUp(testcase);
+        testcase.parentNode = NULL;
+        testcase.beforeAction = '\0';
+
+        Node testcase2;
+        testcase2 = moveDown(testcase2);
+        testcase2 = moveDown(testcase2);
+        testcase2.parentNode = NULL;
+        testcase2.beforeAction = '\0';
+
+
+
         createProblems(100);
         struct timeval t0, t1;
         for(int i=0;i<100;i++){
                 gettimeofday(&t0, NULL);
-                astar(problems[i]);
+                // astar(problems[i]);
+                astar(testcase);
                 gettimeofday(&t1, NULL);
                 cout << openList.size() + closedList.size() << endl;
                 printTime(t0,t1);
