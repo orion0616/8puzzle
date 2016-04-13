@@ -18,7 +18,6 @@ public:
                         for(int j=0;j<3;j++)
                                 state[i][j] = 3*i+j;
                 }
-                pathCost = 0;
                 parentNode = NULL;
         }
         ~Node(){};
@@ -27,24 +26,27 @@ public:
                         for(int j=0;j<3;j++)
                                 state[i][j] = n.state[i][j];
                 }
-                pathCost = n.pathCost;
                 parentNode = n.parentNode;
                 beforeAction = n.beforeAction;
         }
         int state[3][3];
-        int pathCost;
+        int pathCost()const{
+                if(parentNode == NULL)
+                        return 0;
+                else
+                        return parentNode->pathCost()+1;
+        }
         Node* parentNode;
         char beforeAction;
         int heuristic()const;
         int evalF()const{
-                return pathCost + heuristic();
+                return pathCost() + heuristic();
         }
         Node& operator=(const Node& x){
                 for(int i=0;i<3;i++){
                         for(int j=0;j<3;j++)
                                 this->state[i][j] = x.state[i][j];
                 }
-                this->pathCost = x.pathCost;
                 this->parentNode = x.parentNode;
                 this->beforeAction = x.beforeAction;
                 return *this;
@@ -117,7 +119,6 @@ Node moveDown(Node& n){
         Node after = n;
         after.state[emptyI+1][emptyJ] = n.state[emptyI][emptyJ];
         after.state[emptyI][emptyJ] = n.state[emptyI+1][emptyJ];
-        after.pathCost++;
         after.beforeAction = 'D';
         after.parentNode = &n;
         return after;
@@ -132,7 +133,6 @@ Node moveUp(Node& n){
         Node after = n;
         after.state[emptyI-1][emptyJ] = n.state[emptyI][emptyJ];
         after.state[emptyI][emptyJ] = n.state[emptyI-1][emptyJ];
-        after.pathCost++;
         after.beforeAction = 'U';
         after.parentNode = &n;
         return after;
@@ -147,7 +147,6 @@ Node moveLeft(Node& n){
         Node after = n;
         after.state[emptyI][emptyJ-1] = n.state[emptyI][emptyJ];
         after.state[emptyI][emptyJ] = n.state[emptyI][emptyJ-1];
-        after.pathCost++;
         after.beforeAction = 'L';
         after.parentNode = &n;
         return after;
@@ -162,7 +161,7 @@ Node moveRight(Node& n){
         Node after = n;
         after.state[emptyI][emptyJ+1] = n.state[emptyI][emptyJ];
         after.state[emptyI][emptyJ] = n.state[emptyI][emptyJ+1];
-        after.pathCost++;
+
         after.beforeAction = 'R';
         after.parentNode = &n;
         return after;
@@ -259,7 +258,7 @@ void addchild(Node& n){
 
 void printResult(Node& n){
         vector<char> actions;
-        int pathCost = n.pathCost;
+        int pathCost = n.pathCost();
         while(n.parentNode != NULL){
                 actions.push_back(n.beforeAction);
                 n = *(n.parentNode);
@@ -310,7 +309,6 @@ void createProblems(int num){
                 for(int j=0;j<100;j++){
                         n = randomize(n);
                 }
-                n.pathCost = 0;
                 n.beforeAction = '\0';
                 n.parentNode = NULL;
                 problems.push_back(n);
