@@ -321,13 +321,20 @@ int main(){
         createProblems(100);
         struct timeval t0, t1;
         for(int i=0;i<100;i++){
-                // cout << "start solving" << endl;
+                cout << "start solving" << endl;
                 gettimeofday(&t0, NULL);
                 astar(problems[i]);
                 gettimeofday(&t1, NULL);
                 printTime(t0,t1);
-                cout << "the number of nodes is " << closedList.size() + openList.size() << endl << endl;
+                cout << "the number of nodes is " << closedList.size() + openList.size() << endl;
+                cout << "start terminating openList" << endl;
+                while(!openList.empty()){
+                        // cout << "abc" << endl;
+                        openList.pop();
+                        // cout << "def" << endl;
+                }
                 Node* nP;
+                cout << "start terminating closedList" << endl;
                 while(!closedList.empty()){
                         nP = closedList[closedList.size()-1];
                         if(nP != NULL){
@@ -336,8 +343,6 @@ int main(){
                         }
                         closedList.pop_back();
                 }
-                while(!openList.empty()){
-                        openList.pop();
-                }
+                cout << "all done" << endl << endl;
         }
 }
