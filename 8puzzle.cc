@@ -349,6 +349,7 @@ int main(){
                 gettimeofday(&t0, NULL);
                 astar(problems[i]);
                 gettimeofday(&t1, NULL);
+                cout << openList.size() + closedList.size() << endl;
                 printTime(t0,t1);
                 while(!openList.empty()){
                         openList.pop();
