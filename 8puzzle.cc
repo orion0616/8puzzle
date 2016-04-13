@@ -199,7 +199,7 @@ priority_queue<Node, vector<Node>, greater<Node> > openList;
 vector<Node*> closedList;
 
 int findClosedList(Node n){
-        for(int i=0;i<closedList.size();i++){
+        for(int i=0,len = closedList.size();i<len;i++){
                 if(n == *closedList[i])
                         return i;
         }
