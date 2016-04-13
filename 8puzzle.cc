@@ -7,6 +7,8 @@
 #include <random>
 #include <sys/time.h>
 #include <unistd.h>
+#include <map>
+#include "BinaryHeap.h"
 
 using namespace std;
 
@@ -29,6 +31,7 @@ public:
                 beforeAction = n.beforeAction;
         }
         int state[3][3];
+        int stateToInt()const;
         int pathCost()const{
                 if(parentNode == NULL)
                         return 0;
@@ -52,6 +55,9 @@ public:
         }
         bool operator>(const Node& y)const{
                 return this->evalF() > y.evalF();
+        }
+        bool operator<(const Node& y)const{
+                return this->evalF() < y.evalF();
         }
         bool operator==(const Node& y)const{
                 bool ans = true;
@@ -95,7 +101,11 @@ int Node::heuristic()const{
         return h2(*this);
 }
 
-pair<int,int> whereEmpty(const Node n){
+int Node::stateToInt()const{
+        return state[0][0]*100000000 + state[0][1]*10000000 + state[0][2]*1000000 + state[1][0]*100000 + state[1][1]*10000 + state[1][2]*1000 +state[2][0]*100 + state[2][1]*10 +state[2][2];
+}
+
+pair<int,int> whereEmpty(Node n){
         int emptyI,emptyJ;
         for(int i=0;i<3;i++){
                 for(int j=0;j<3;j++){
@@ -195,32 +205,38 @@ bool isGoal(Node n){
         return true;
 }
 
-priority_queue<Node, vector<Node>, greater<Node> > openList;
-vector<Node*> closedList;
+BinaryHeap<Node> openList;
+map<int,Node*> closedList;
+map<int,Node*>::iterator it;
 
-int findClosedList(Node n){
-        for(int i=0,len = closedList.size();i<len;i++){
-                if(n == *closedList[i])
-                        return i;
+void printState(Node n){
+        for(int i=0;i<3;i++){
+                for(int j=0;j<3;j++){
+                        cout << n.state[i][j];
+                }
+                cout << endl;
         }
-        return -1;
 }
 
-void pushToOpenList(Node n){
+void pushToOpenList(const Node& n){
         int num;
-        //the same state in openList
-        if(false){
+        // the same state in openList
+        if((num = openList.find(n)) != -1){
+                if(openList.a[num].pathCost() > n.pathCost()){
+                        openList.a[num].parentNode = n.parentNode;
+                        openList.bubbleUp(num);
+                }
                 return;
         }
         //the same state in closedList;
-        else if((num = findClosedList(n)) != -1){
-                if(closedList[num]->pathCost() > n.pathCost()){
-                        closedList[num]->parentNode = n.parentNode;
+        else if((it = closedList.find(n.stateToInt())) != closedList.end()){
+                if((*it).second->pathCost() > n.pathCost()){
+                        (*it).second->parentNode = n.parentNode;
                 }
                 return;
         }
         else{
-                openList.push(n);
+                openList.add(n);
         }
         return;
 }
@@ -300,12 +316,12 @@ void printResult(Node& n){
 vector<Node> problems;
 
 void astar(Node& n){
-        openList.push(n);
+        openList.add(n);
         Node* node;
         while(!openList.empty()){
-                node = new Node(openList.top());
-                openList.pop();
-                closedList.push_back(node);
+                node = new Node(openList.findMin());
+                openList.remove();
+                closedList[node->stateToInt()] = node;
                 if(isGoal(*node)){
                         printResult(*node);
                         return;
@@ -343,67 +359,24 @@ void createProblems(int num){
 
 
 int main(){
-        Node testcase;
-        testcase = moveDown(testcase);
-        testcase = moveRight(testcase);
-        testcase = moveRight(testcase);
-        testcase = moveUp(testcase);
-        testcase = moveLeft(testcase);
-        testcase = moveLeft(testcase);
-        testcase = moveDown(testcase);
-        testcase = moveDown(testcase);
-        testcase = moveRight(testcase);
-        testcase = moveUp(testcase);
-        testcase = moveUp(testcase);
-        testcase = moveLeft(testcase);
-        testcase = moveDown(testcase);
-        testcase = moveDown(testcase);
-        testcase = moveRight(testcase);
-        testcase = moveUp(testcase);
-        testcase = moveRight(testcase);
-        testcase = moveDown(testcase);
-        testcase = moveLeft(testcase);
-        testcase = moveUp(testcase);
-        testcase = moveRight(testcase);
-        testcase = moveUp(testcase);
-        testcase = moveLeft(testcase);
-        testcase = moveDown(testcase);
-        testcase = moveLeft(testcase);
-        testcase = moveDown(testcase);
-        testcase = moveRight(testcase);
-        testcase = moveRight(testcase);
-        testcase = moveUp(testcase);
-        testcase.parentNode = NULL;
-        testcase.beforeAction = '\0';
-
-        Node testcase2;
-        testcase2 = moveDown(testcase2);
-        testcase2 = moveDown(testcase2);
-        testcase2.parentNode = NULL;
-        testcase2.beforeAction = '\0';
-
-
-
         createProblems(100);
         struct timeval t0, t1;
         for(int i=0;i<100;i++){
                 gettimeofday(&t0, NULL);
-                // astar(problems[i]);
-                astar(testcase);
+                astar(problems[i]);
                 gettimeofday(&t1, NULL);
-                cout << openList.size() + closedList.size() << endl;
+                cout << openList.n + closedList.size() << endl;
                 printTime(t0,t1);
                 while(!openList.empty()){
-                        openList.pop();
+                        openList.remove();
                 }
                 Node* nP;
-                while(!closedList.empty()){
-                        nP = closedList[closedList.size()-1];
-                        if(nP != NULL){
-                                delete nP;
-                                nP = NULL;
+                for(it = closedList.begin();it!=closedList.end();it++){
+                        if((*it).second != NULL){
+                                delete (*it).second;
+                                (*it).second = NULL;
                         }
-                        closedList.pop_back();
                 }
+                closedList.clear();
         }
 }
