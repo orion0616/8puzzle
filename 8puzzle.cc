@@ -66,7 +66,6 @@ public:
         }
 };
 
-
 int h1(Node n){
         int count = 0;
         for(int i=0;i<3;i++){
@@ -210,11 +209,11 @@ int findClosedList(Node n){
 
 void pushToOpenList(Node n){
         int num;
-        //n in openList
+        //the same state in openList
         if(false){
                 return;
         }
-        //n in closedList;
+        //the same state in closedList;
         else if((num = findClosedList(n)) != -1){
                 if(closedList[num]->pathCost() > n.pathCost()){
                         closedList[num]->parentNode = n.parentNode;
@@ -227,7 +226,7 @@ void pushToOpenList(Node n){
         return;
 }
 
-void addchild(Node& n){
+void addChild(Node& n){
         pair<int,int> empty = whereEmpty(n);
         int emptyI = empty.first;
         int emptyJ = empty.second;
@@ -313,7 +312,7 @@ void astar(Node& n){
                         return;
                 }
                 else{
-                        addchild(*node);
+                        addChild(*node);
                 }
         }
         return;
