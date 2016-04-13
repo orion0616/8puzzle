@@ -210,10 +210,23 @@ int findClosedList(Node n){
         return -1;
 }
 
+void printState(Node n){
+        for(int i=0;i<3;i++){
+                for(int j=0;j<3;j++){
+                        cout << n.state[i][j];
+                }
+                cout << endl;
+        }
+}
+
 void pushToOpenList(Node n){
         int num;
         //the same state in openList
-        if(false){
+        if((num = openList.find(n)) != -1){
+                if(openList.a[num].pathCost() > n.pathCost()){
+                        openList.a[num].parentNode = n.parentNode;
+                        openList.bubbleUp(num);
+                }
                 return;
         }
         //the same state in closedList;
@@ -353,6 +366,7 @@ int main(){
                 gettimeofday(&t0, NULL);
                 astar(problems[i]);
                 gettimeofday(&t1, NULL);
+                cout << openList.n + closedList.size() << endl;
                 printTime(t0,t1);
                 while(!openList.empty()){
                         openList.remove();
