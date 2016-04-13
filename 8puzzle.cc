@@ -7,6 +7,7 @@
 #include <random>
 #include <sys/time.h>
 #include <unistd.h>
+#include "BinaryHeap.h"
 
 using namespace std;
 
@@ -52,6 +53,9 @@ public:
         }
         bool operator>(const Node& y)const{
                 return this->evalF() > y.evalF();
+        }
+        bool operator<(const Node& y)const{
+                return this->evalF() < y.evalF();
         }
         bool operator==(const Node& y)const{
                 bool ans = true;
@@ -195,7 +199,7 @@ bool isGoal(Node n){
         return true;
 }
 
-priority_queue<Node, vector<Node>, greater<Node> > openList;
+BinaryHeap<Node> openList;
 vector<Node*> closedList;
 
 int findClosedList(Node n){
@@ -220,7 +224,7 @@ void pushToOpenList(Node n){
                 return;
         }
         else{
-                openList.push(n);
+                openList.add(n);
         }
         return;
 }
@@ -300,11 +304,11 @@ void printResult(Node& n){
 vector<Node> problems;
 
 void astar(Node& n){
-        openList.push(n);
+        openList.add(n);
         Node* node;
         while(!openList.empty()){
-                node = new Node(openList.top());
-                openList.pop();
+                node = new Node(openList.findMin());
+                openList.remove();
                 closedList.push_back(node);
                 if(isGoal(*node)){
                         printResult(*node);
@@ -351,7 +355,7 @@ int main(){
                 gettimeofday(&t1, NULL);
                 printTime(t0,t1);
                 while(!openList.empty()){
-                        openList.pop();
+                        openList.remove();
                 }
                 Node* nP;
                 while(!closedList.empty()){
