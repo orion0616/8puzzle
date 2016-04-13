@@ -52,6 +52,16 @@ public:
         bool operator>(const Node& y)const{
                 return this->evalF() > y.evalF();
         }
+        bool operator==(const Node& y)const{
+                bool ans = true;
+                for(int i=0;i<3;i++){
+                        for(int j=0;j<3;j++){
+                                if(this->state[i][j]!=y.state[i][j])
+                                        ans = false;
+                        }
+                }
+                return ans;
+        }
 };
 
 
@@ -196,7 +206,6 @@ void addchild(Node& n){
         int emptyI = empty.first;
         int emptyJ = empty.second;
         //角
-        Node *a,*b,*c,*d;
         if((emptyI == 0 || emptyI == 2) && (emptyJ == 0 || emptyJ == 2)){
                 if(emptyI== 0 && emptyJ==0){
                         openList.push(moveDown(n));
@@ -309,6 +318,7 @@ void createProblems(int num){
         return;
 }
 
+
 int main(){
         createProblems(100);
         struct timeval t0, t1;
@@ -318,8 +328,7 @@ int main(){
                 astar(problems[i]);
                 gettimeofday(&t1, NULL);
                 printTime(t0,t1);
-                // cout << "end solving" << endl;
-                // cout << "the number of nodes is " << closedList.size() << " " << openList.size() << endl;
+                cout << "the number of nodes is " << closedList.size() + openList.size() << endl << endl;
                 Node* nP;
                 while(!closedList.empty()){
                         nP = closedList[closedList.size()-1];
