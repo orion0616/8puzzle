@@ -243,13 +243,13 @@ void addChild(Node& n){
                         pushToOpenList(moveUp(n));
                         pushToOpenList(moveRight(n));
                 }
-                else if(emptyI==2 && emptyJ==2){
+                else{
                         pushToOpenList(moveUp(n));
                         pushToOpenList(moveLeft(n));
                 }
         }
         //角を除く辺上
-        else if((emptyI == 0 || emptyI == 2) || (emptyJ == 0 || emptyJ == 2)){
+        else if(emptyI == 0 || emptyI == 2 || emptyJ == 0 || emptyJ == 2){
                 if(emptyI==0){
                         pushToOpenList(moveDown(n));
                         pushToOpenList(moveLeft(n));
@@ -265,7 +265,7 @@ void addChild(Node& n){
                         pushToOpenList(moveUp(n));
                         pushToOpenList(moveRight(n));
                 }
-                else if(emptyJ==2){
+                else{
                         pushToOpenList(moveDown(n));
                         pushToOpenList(moveUp(n));
                         pushToOpenList(moveLeft(n));
