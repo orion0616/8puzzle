@@ -65,7 +65,6 @@ public:
         }
 };
 
-
 int h1(Node n){
         int count = 0;
         for(int i=0;i<3;i++){
@@ -199,58 +198,85 @@ bool isGoal(Node n){
 priority_queue<Node, vector<Node>, greater<Node> > openList;
 vector<Node*> closedList;
 
-void addchild(Node& n){
+int findClosedList(Node n){
+        for(int i=0;i<closedList.size();i++){
+                if(n == *closedList[i])
+                        return i;
+        }
+        return -1;
+}
+
+void pushToOpenList(Node n){
+        int num;
+        //the same state in openList
+        if(false){
+                return;
+        }
+        //the same state in closedList;
+        else if((num = findClosedList(n)) != -1){
+                if(closedList[num]->pathCost() > n.pathCost()){
+                        closedList[num]->parentNode = n.parentNode;
+                }
+                return;
+        }
+        else{
+                openList.push(n);
+        }
+        return;
+}
+
+void addChild(Node& n){
         pair<int,int> empty = whereEmpty(n);
         int emptyI = empty.first;
         int emptyJ = empty.second;
         //角
         if((emptyI == 0 || emptyI == 2) && (emptyJ == 0 || emptyJ == 2)){
                 if(emptyI== 0 && emptyJ==0){
-                        openList.push(moveDown(n));
-                        openList.push(moveRight(n));
+                        pushToOpenList(moveDown(n));
+                        pushToOpenList(moveRight(n));
                 }
                 else if(emptyI==0 && emptyJ==2){
-                        openList.push(moveDown(n));
-                        openList.push(moveLeft(n));
+                        pushToOpenList(moveDown(n));
+                        pushToOpenList(moveLeft(n));
                 }
                 else if(emptyI==2 && emptyJ==0){
-                        openList.push(moveUp(n));
-                        openList.push(moveRight(n));
+                        pushToOpenList(moveUp(n));
+                        pushToOpenList(moveRight(n));
                 }
                 else if(emptyI==2 && emptyJ==2){
-                        openList.push(moveUp(n));
-                        openList.push(moveLeft(n));
+                        pushToOpenList(moveUp(n));
+                        pushToOpenList(moveLeft(n));
                 }
         }
         //角を除く辺上
         else if((emptyI == 0 || emptyI == 2) || (emptyJ == 0 || emptyJ == 2)){
                 if(emptyI==0){
-                        openList.push(moveDown(n));
-                        openList.push(moveLeft(n));
-                        openList.push(moveRight(n));
+                        pushToOpenList(moveDown(n));
+                        pushToOpenList(moveLeft(n));
+                        pushToOpenList(moveRight(n));
                 }
                 else if(emptyI==2){
-                        openList.push(moveUp(n));
-                        openList.push(moveLeft(n));
-                        openList.push(moveRight(n));
+                        pushToOpenList(moveUp(n));
+                        pushToOpenList(moveLeft(n));
+                        pushToOpenList(moveRight(n));
                 }
                 else if(emptyJ==0){
-                        openList.push(moveDown(n));
-                        openList.push(moveUp(n));
-                        openList.push(moveRight(n));
+                        pushToOpenList(moveDown(n));
+                        pushToOpenList(moveUp(n));
+                        pushToOpenList(moveRight(n));
                 }
                 else if(emptyJ==2){
-                        openList.push(moveDown(n));
-                        openList.push(moveUp(n));
-                        openList.push(moveLeft(n));
+                        pushToOpenList(moveDown(n));
+                        pushToOpenList(moveUp(n));
+                        pushToOpenList(moveLeft(n));
                 }
         }
         //それ以外
         else{
-                        openList.push(moveDown(n));
-                        openList.push(moveUp(n));
-                        openList.push(moveLeft(n));
-                        openList.push(moveRight(n));
+                        pushToOpenList(moveDown(n));
+                        pushToOpenList(moveUp(n));
+                        pushToOpenList(moveLeft(n));
+                        pushToOpenList(moveRight(n));
         }
         return;
 }
@@ -285,7 +311,7 @@ void astar(Node& n){
                         return;
                 }
                 else{
-                        addchild(*node);
+                        addChild(*node);
                 }
         }
         return;
@@ -299,7 +325,7 @@ void printTime(timeval t0, timeval t1){
         } else {
                 t1.tv_usec -= t0.tv_usec;
         }
-        printf("%ld.%06d sec\n", t1.tv_sec, t1.tv_usec);
+        printf("%ld.%06d sec\n\n", t1.tv_sec, t1.tv_usec);
 }
 
 void createProblems(int num){
@@ -320,20 +346,14 @@ int main(){
         createProblems(100);
         struct timeval t0, t1;
         for(int i=0;i<100;i++){
-                cout << "start solving" << endl;
                 gettimeofday(&t0, NULL);
                 astar(problems[i]);
                 gettimeofday(&t1, NULL);
                 printTime(t0,t1);
-                cout << "the number of nodes is " << closedList.size() + openList.size() << endl;
-                cout << "start terminating openList" << endl;
                 while(!openList.empty()){
-                        // cout << "abc" << endl;
                         openList.pop();
-                        // cout << "def" << endl;
                 }
                 Node* nP;
-                cout << "start terminating closedList" << endl;
                 while(!closedList.empty()){
                         nP = closedList[closedList.size()-1];
                         if(nP != NULL){
@@ -342,6 +362,5 @@ int main(){
                         }
                         closedList.pop_back();
                 }
-                cout << "all done" << endl << endl;
         }
 }
