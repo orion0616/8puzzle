@@ -220,21 +220,22 @@ void printState(Node n){
 
 void pushToOpenList(const Node& n){
         int num;
+        //the same state in closedList;
+        if((it = closedList.find(n.stateToInt())) != closedList.end()){
+                if((*it).second->pathCost() > n.pathCost()){
+                        (*it).second->parentNode = n.parentNode;
+                }
+                return;
+        }
         // the same state in openList
-        if((num = openList.find(n)) != -1){
+        else if((num = openList.find(n)) != -1){
                 if(openList.a[num].pathCost() > n.pathCost()){
                         openList.a[num].parentNode = n.parentNode;
                         openList.bubbleUp(num);
                 }
                 return;
         }
-        //the same state in closedList;
-        else if((it = closedList.find(n.stateToInt())) != closedList.end()){
-                if((*it).second->pathCost() > n.pathCost()){
-                        (*it).second->parentNode = n.parentNode;
-                }
-                return;
-        }
+
         else{
                 openList.add(n);
         }
