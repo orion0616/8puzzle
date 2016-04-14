@@ -356,7 +356,6 @@ void createProblems(int num){
         return;
 }
 
-
 int main(){
         createProblems(100);
         struct timeval t0, t1;
@@ -369,7 +368,6 @@ int main(){
                 while(!openList.empty()){
                         openList.remove();
                 }
-                Node* nP;
                 for(it = closedList.begin();it!=closedList.end();it++){
                         if((*it).second != NULL){
                                 delete (*it).second;
