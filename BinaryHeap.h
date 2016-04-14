@@ -12,7 +12,6 @@ public:
 	int n;
 	void bubbleUp(int i);
 	void trickleDown(int i);
-	void resize();
 	bool empty(){
 		return n==0;
 	}
@@ -27,7 +26,6 @@ public:
 	}
 	vector<T> a;
 	BinaryHeap();
-	BinaryHeap(vector<T>& b);
 	virtual ~BinaryHeap();
 	bool add(T x);
 	T findMin() {
@@ -40,12 +38,6 @@ public:
 	int find(T x);
 };
 
-template<class T>
-void BinaryHeap<T>::resize() {
-	vector<T> b(max(2*n, 1));
-	std::copy(a.begin(), a.end(), back_inserter(b));
-	a = b;
-}
 
 template<class T>
 bool BinaryHeap<T>::add(T x) {
@@ -106,15 +98,6 @@ void BinaryHeap<T>::trickleDown(int i) {
 template<class T>
 BinaryHeap<T>::BinaryHeap() {
 	n = 0;
-}
-
-template<class T>
-BinaryHeap<T>::BinaryHeap(vector<T> &b) : a(0) {
-	a = b;
-	n = a.size();
-	for (int i = n/2-1; i >= 0; i--) {
-		trickleDown(i);
-	}
 }
 
 template<class T>
