@@ -51,9 +51,6 @@ public:
                 this->beforeAction = x.beforeAction;
                 return *this;
         }
-        bool operator>(const Node& y)const{
-                return this->evalF() > y.evalF();
-        }
         bool operator<(const Node& y)const{
                 return this->evalF() < y.evalF();
         }
@@ -68,6 +65,11 @@ public:
                 return ans;
         }
 };
+
+BinaryHeap<Node> openList;
+map<int,Node*> closedList;
+map<int,Node*>::iterator it;
+vector<Node> problems;
 
 int h1(Node n){
         int count = 0;
@@ -203,10 +205,6 @@ bool isGoal(Node n){
         return true;
 }
 
-BinaryHeap<Node> openList;
-map<int,Node*> closedList;
-map<int,Node*>::iterator it;
-
 void printState(Node n){
         for(int i=0;i<3;i++){
                 for(int j=0;j<3;j++){
@@ -216,7 +214,7 @@ void printState(Node n){
         }
 }
 
-void pushToOpenList(const Node& n){
+void addToOpenList(const Node& n){
         int num;
         //the same state in closedList;
         if((it = closedList.find(n.stateToInt())) != closedList.end()){
@@ -247,51 +245,51 @@ void addChild(Node& n){
         //角
         if((emptyI == 0 || emptyI == 2) && (emptyJ == 0 || emptyJ == 2)){
                 if(emptyI== 0 && emptyJ==0){
-                        pushToOpenList(moveDown(n));
-                        pushToOpenList(moveRight(n));
+                        addToOpenList(moveDown(n));
+                        addToOpenList(moveRight(n));
                 }
                 else if(emptyI==0 && emptyJ==2){
-                        pushToOpenList(moveDown(n));
-                        pushToOpenList(moveLeft(n));
+                        addToOpenList(moveDown(n));
+                        addToOpenList(moveLeft(n));
                 }
                 else if(emptyI==2 && emptyJ==0){
-                        pushToOpenList(moveUp(n));
-                        pushToOpenList(moveRight(n));
+                        addToOpenList(moveUp(n));
+                        addToOpenList(moveRight(n));
                 }
                 else{
-                        pushToOpenList(moveUp(n));
-                        pushToOpenList(moveLeft(n));
+                        addToOpenList(moveUp(n));
+                        addToOpenList(moveLeft(n));
                 }
         }
         //角を除く辺上
         else if(emptyI == 0 || emptyI == 2 || emptyJ == 0 || emptyJ == 2){
                 if(emptyI==0){
-                        pushToOpenList(moveDown(n));
-                        pushToOpenList(moveLeft(n));
-                        pushToOpenList(moveRight(n));
+                        addToOpenList(moveDown(n));
+                        addToOpenList(moveLeft(n));
+                        addToOpenList(moveRight(n));
                 }
                 else if(emptyI==2){
-                        pushToOpenList(moveUp(n));
-                        pushToOpenList(moveLeft(n));
-                        pushToOpenList(moveRight(n));
+                        addToOpenList(moveUp(n));
+                        addToOpenList(moveLeft(n));
+                        addToOpenList(moveRight(n));
                 }
                 else if(emptyJ==0){
-                        pushToOpenList(moveDown(n));
-                        pushToOpenList(moveUp(n));
-                        pushToOpenList(moveRight(n));
+                        addToOpenList(moveDown(n));
+                        addToOpenList(moveUp(n));
+                        addToOpenList(moveRight(n));
                 }
                 else{
-                        pushToOpenList(moveDown(n));
-                        pushToOpenList(moveUp(n));
-                        pushToOpenList(moveLeft(n));
+                        addToOpenList(moveDown(n));
+                        addToOpenList(moveUp(n));
+                        addToOpenList(moveLeft(n));
                 }
         }
         //それ以外
         else{
-                        pushToOpenList(moveDown(n));
-                        pushToOpenList(moveUp(n));
-                        pushToOpenList(moveLeft(n));
-                        pushToOpenList(moveRight(n));
+                        addToOpenList(moveDown(n));
+                        addToOpenList(moveUp(n));
+                        addToOpenList(moveLeft(n));
+                        addToOpenList(moveRight(n));
         }
         return;
 }
@@ -311,8 +309,6 @@ void printResult(Node& n){
         cout << endl;
         return;
 }
-
-vector<Node> problems;
 
 void astar(Node& n){
         openList.add(n);
