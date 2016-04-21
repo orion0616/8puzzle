@@ -6,6 +6,7 @@
 #include <random>
 #include <sys/time.h>
 #include <map>
+#include <unordered_map>
 #include "BinaryHeap.h"
 
 using namespace std;
@@ -67,8 +68,10 @@ public:
 };
 
 BinaryHeap<Node> openList;
-map<int,Node*> closedList;
-map<int,Node*>::iterator it;
+unordered_map<int,Node*> closedList;
+unordered_map<int,Node*>::iterator it;
+
+
 vector<Node> problems;
 
 int h1(Node n){
