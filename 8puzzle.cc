@@ -7,7 +7,6 @@
 #include <sys/time.h>
 #include <map>
 #include <unordered_map>
-#include "BinaryHeap.h"
 
 using namespace std;
 
@@ -67,10 +66,12 @@ public:
         }
 };
 
-BinaryHeap<Node> openList;
+#include "BinaryHeap.h"
+#include "NodeBinaryHeap.h"
+
+NodeBinaryHeap openList;
 unordered_map<int,Node*> closedList;
 unordered_map<int,Node*>::iterator it;
-
 
 vector<Node> problems;
 
@@ -217,7 +218,17 @@ void printState(Node n){
         }
 }
 
-void addToOpenList(const Node& n){
+void printstate(Node& n){
+        for(int i=0;i<3;i++){
+                for(int j=0;j<3;j++){
+                        cout << n.state[i][j];
+                }
+                cout << endl;
+        }
+        cout << endl;
+}
+
+void addToOpenList(Node& n){
         int num;
         //the same state in closedList;
         if((it = closedList.find(n.stateToInt())) != closedList.end()){
@@ -227,16 +238,17 @@ void addToOpenList(const Node& n){
                 return;
         }
         // the same state in openList
-        else if((num = openList.find(n)) != -1){
-                if(openList.a[num].pathCost() > n.pathCost()){
-                        openList.a[num].parentNode = n.parentNode;
+        else if((num = openList.find(n.stateToInt())) != -1){
+                if(openList.a[num]->pathCost() > n.pathCost()){
+                        openList.a[num]->parentNode = n.parentNode;
                         openList.bubbleUp(num);
                 }
                 return;
         }
 
         else{
-                openList.add(n);
+                openList.add(&n);
+                // printstate(n);
         }
         return;
 }
@@ -248,51 +260,99 @@ void addChild(Node& n){
         //角
         if((emptyI == 0 || emptyI == 2) && (emptyJ == 0 || emptyJ == 2)){
                 if(emptyI== 0 && emptyJ==0){
-                        addToOpenList(moveDown(n));
-                        addToOpenList(moveRight(n));
+                        Node* a = new Node();
+                        Node* b = new Node();
+                        *a = moveDown(n);
+                        *b = moveRight(n);
+                        addToOpenList(*a);
+                        addToOpenList(*b);
                 }
                 else if(emptyI==0 && emptyJ==2){
-                        addToOpenList(moveDown(n));
-                        addToOpenList(moveLeft(n));
+                        Node* a = new Node();
+                        Node* b = new Node();
+                        *a = moveDown(n);
+                        *b = moveLeft(n);
+                        addToOpenList(*a);
+                        addToOpenList(*b);
                 }
                 else if(emptyI==2 && emptyJ==0){
-                        addToOpenList(moveUp(n));
-                        addToOpenList(moveRight(n));
+                        Node* a = new Node();
+                        Node* b = new Node();
+                        *a = moveUp(n);
+                        *b = moveRight(n);
+                        addToOpenList(*a);
+                        addToOpenList(*b);
                 }
                 else{
-                        addToOpenList(moveUp(n));
-                        addToOpenList(moveLeft(n));
+                        Node* a = new Node();
+                        Node* b = new Node();
+                        *a = moveUp(n);
+                        *b = moveLeft(n);
+                        addToOpenList(*a);
+                        addToOpenList(*b);
                 }
         }
         //角を除く辺上
         else if(emptyI == 0 || emptyI == 2 || emptyJ == 0 || emptyJ == 2){
                 if(emptyI==0){
-                        addToOpenList(moveDown(n));
-                        addToOpenList(moveLeft(n));
-                        addToOpenList(moveRight(n));
+                        Node* a = new Node();
+                        Node* b = new Node();
+                        Node* c = new Node();
+                        *a = moveDown(n);
+                        *b = moveLeft(n);
+                        *c = moveRight(n);
+                        addToOpenList(*a);
+                        addToOpenList(*b);
+                        addToOpenList(*c);
                 }
                 else if(emptyI==2){
-                        addToOpenList(moveUp(n));
-                        addToOpenList(moveLeft(n));
-                        addToOpenList(moveRight(n));
+                        Node* a = new Node();
+                        Node* b = new Node();
+                        Node* c = new Node();
+                        *a = moveUp(n);
+                        *b = moveLeft(n);
+                        *c = moveRight(n);
+                        addToOpenList(*a);
+                        addToOpenList(*b);
+                        addToOpenList(*c);
                 }
                 else if(emptyJ==0){
-                        addToOpenList(moveDown(n));
-                        addToOpenList(moveUp(n));
-                        addToOpenList(moveRight(n));
+                        Node* a = new Node();
+                        Node* b = new Node();
+                        Node* c = new Node();
+                        *a = moveDown(n);
+                        *b = moveUp(n);
+                        *c = moveRight(n);
+                        addToOpenList(*a);
+                        addToOpenList(*b);
+                        addToOpenList(*c);
                 }
                 else{
-                        addToOpenList(moveDown(n));
-                        addToOpenList(moveUp(n));
-                        addToOpenList(moveLeft(n));
+                        Node* a = new Node();
+                        Node* b = new Node();
+                        Node* c = new Node();
+                        *a = moveDown(n);
+                        *b = moveUp(n);
+                        *c = moveLeft(n);
+                        addToOpenList(*a);
+                        addToOpenList(*b);
+                        addToOpenList(*c);
                 }
         }
         //それ以外
         else{
-                        addToOpenList(moveDown(n));
-                        addToOpenList(moveUp(n));
-                        addToOpenList(moveLeft(n));
-                        addToOpenList(moveRight(n));
+                Node* a = new Node();
+                Node* b = new Node();
+                Node* c = new Node();
+                Node* d = new Node();
+                *a = moveDown(n);
+                *b = moveUp(n);
+                *c = moveLeft(n);
+                *d = moveRight(n);
+                addToOpenList(*a);
+                addToOpenList(*b);
+                addToOpenList(*c);
+                addToOpenList(*d);
         }
         return;
 }
@@ -314,17 +374,17 @@ void printResult(Node& n){
 }
 
 void astar(Node& n){
-        openList.add(n);
+        openList.add(&n);
         Node* node;
         while(!openList.empty()){
-                node = new Node(openList.findMin());
+                node = openList.findMin();
                 openList.remove();
-                closedList[node->stateToInt()] = node;
                 if(isGoal(*node)){
                         printResult(*node);
                         return;
                 }
                 else{
+                        closedList[node->stateToInt()] = node;
                         addChild(*node);
                 }
         }
@@ -341,6 +401,7 @@ void printTime(timeval t0, timeval t1){
         }
         printf("%ld.%06d sec\n\n", t1.tv_sec, t1.tv_usec);
 }
+
 
 void createProblems(int num){
         for(int i=0;i<num;i++){
@@ -365,14 +426,19 @@ int main(){
                 cout << openList.n + closedList.size() << endl;
                 printTime(t0,t1);
                 while(!openList.empty()){
+                        Node* node = openList.findMin();
                         openList.remove();
-                }
-                for(it = closedList.begin();it!=closedList.end();it++){
-                        if((*it).second != NULL){
-                                delete (*it).second;
-                                (*it).second = NULL;
+                        if(node != NULL){
+                                delete node;
+                                node = NULL;
                         }
                 }
+                // for(it = closedList.begin();it!=closedList.end();it++){
+                //         if((*it).second != NULL){
+                //                 delete (*it).second;
+                //                 (*it).second = NULL;
+                //         }
+                // }
                 closedList.clear();
         }
 }
