@@ -1,14 +1,15 @@
-8puzzle: 8puzzle.o NodeBinaryHeap.o Node.o
-	g++ -Wall -O2  8puzzle.o NodeBinaryHeap.o  Node.o
+CXX = g++
+OBJS = 8puzzle.o NodeBinaryHeap.o Node.o
 
-8puzzle.o: 8puzzle.cc
-	g++ -c 8puzzle.cc
+8puzzle: $(OBJS)
+	$(CXX) -Wall -O2 -o $@ $(OBJS)
 
-NodeBinaryHeap.o: NodeBinaryHeap.cc
-	g++ -c NodeBinaryHeap.cc
+.cc.oo:
+	$(CXX) -c $<
 
-Node.o: Node.cc
-	g++ -c Node.cc
+8puzzle.cc: BinaryHeap.h NodeBinaryHeap.h Node.h
+NodeBinaryHeap.cc: BinaryHeap.h NodeBinaryHeap.h Node.h
+Node.cc: Node.h
 
 clean:
-	rm -rf *.o
+	rm -f *.o
