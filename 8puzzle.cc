@@ -16,22 +16,6 @@ using namespace std;
 
 NodeBinaryHeap openList;
 unordered_map<int,Node*> closedList;
-unordered_map<int,Node*>::iterator it;
-
-vector<Node> problems;
-
-pair<int,int> whereEmpty(Node n){
-        int emptyI,emptyJ;
-        for(int i=0;i<3;i++){
-                for(int j=0;j<3;j++){
-                        if(n.state[i][j]==0){
-                                emptyI = i;
-                                emptyJ = j;
-                        }
-                }
-        }
-        return make_pair(emptyI,emptyJ);
-}
 
 Node moveDown(Node& n){
         pair<int,int> empty = whereEmpty(n);
@@ -120,20 +104,11 @@ bool isGoal(Node n){
         return true;
 }
 
-void printstate(Node& n){
-        for(int i=0;i<3;i++){
-                for(int j=0;j<3;j++){
-                        cout << n.state[i][j];
-                }
-                cout << endl;
-        }
-        cout << endl;
-}
-
 void addToOpenList(Node& n){
         int num;
         //the same state in closedList;
-        if((it = closedList.find(n.stateToInt())) != closedList.end()){
+        auto it = closedList.find(n.stateToInt());
+        if(it != closedList.end()){
                 if((*it).second->pathCost() > n.pathCost()){
                         (*it).second->parentNode = n.parentNode;
                 }
@@ -147,10 +122,8 @@ void addToOpenList(Node& n){
                 }
                 return;
         }
-
         else{
                 openList.add(&n);
-                // printstate(n);
         }
         return;
 }
@@ -305,7 +278,7 @@ void printTime(timeval t0, timeval t1){
 }
 
 
-void createProblems(int num){
+void createProblems(vector<Node>& problems, int num){
         for(int i=0;i<num;i++){
                 Node n;
                 for(int j=0;j<100;j++){
@@ -319,8 +292,11 @@ void createProblems(int num){
 }
 
 int main(){
-        createProblems(100);
+        vector<Node> problems;
+        createProblems(problems,100);
         struct timeval t0, t1;
+
+        //100問解く
         for(int i=0;i<100;i++){
                 gettimeofday(&t0, NULL);
                 astar(problems[i]);

@@ -1,6 +1,8 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include <utility>
+
 class Node{
 public:
         Node();
@@ -25,5 +27,7 @@ public:
 };
 
 int manhattanDistance(Node n);
+
+std::pair<int,int> whereEmpty(Node n);
 
 #endif

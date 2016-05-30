@@ -19,6 +19,18 @@ int manhattanDistance(Node n){
         return count;
 }
 
+pair<int,int> whereEmpty(Node n){
+        int emptyI,emptyJ;
+        for(int i=0;i<3;i++){
+                for(int j=0;j<3;j++){
+                        if(n.state[i][j]==0){
+                                emptyI = i;
+                                emptyJ = j;
+                        }
+                }
+        }
+        return make_pair(emptyI,emptyJ);
+}
 Node::Node(){
         for(int i=0;i<3;i++){
                 for(int j=0;j<3;j++)
