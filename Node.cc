@@ -4,18 +4,7 @@
 
 using namespace std;
 
-int h1(Node n){
-        int count = 0;
-        for(int i=0;i<3;i++){
-                for(int j=0;j<3;j++){
-                        if((3*i+j != n.state[i][j]) && n.state[i][j]!=0)
-                                count++;
-                }
-        }
-        return count;
-}
-
-int h2(Node n){
+int manhattanDistance(Node n){
         int count = 0;
         for(int i=0;i<3;i++){
                 for(int j=0;j<3;j++){
@@ -47,8 +36,17 @@ Node::Node(const Node& n){
         beforeAction = n.beforeAction;
 }
 
+//This is a kind of Hash fucntion for index
 int Node::stateToInt()const{
-        return state[0][0]*100000000 + state[0][1]*10000000 + state[0][2]*1000000 + state[1][0]*100000 + state[1][1]*10000 + state[1][2]*1000 +state[2][0]*100 + state[2][1]*10 +state[2][2];
+        return state[0][0]*100000000 + 
+               state[0][1]*10000000 +
+               state[0][2]*1000000 + 
+               state[1][0]*100000 + 
+               state[1][1]*10000 + 
+               state[1][2]*1000 +
+               state[2][0]*100 + 
+               state[2][1]*10 +
+               state[2][2];
 }
 
 int Node::pathCost()const{
@@ -59,13 +57,15 @@ int Node::pathCost()const{
 }
 
 int Node::heuristic()const{
-        return h2(*this);
+        return manhattanDistance(*this);
 }
 
 int Node::evalF()const{
         return pathCost() + heuristic();
 }
 
+
+//Operator
 Node& Node::operator=(const Node& x){
         for(int i=0;i<3;i++){
                 for(int j=0;j<3;j++)

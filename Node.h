@@ -6,15 +6,24 @@ public:
         Node();
         ~Node(){};
         Node(const Node& n);
+
+        //Member
         int state[3][3];
-        int stateToInt()const;
-        int pathCost()const;
         Node* parentNode;
         char beforeAction;
+
+        //Function
+        int stateToInt()const;
+        int pathCost()const;
         int heuristic()const;
         int evalF()const;
+
+        //Operator
         Node& operator=(const Node& x);
         bool operator<(const Node& y)const;
         bool operator==(const Node& y)const;
 };
+
+int manhattanDistance(Node n);
+
 #endif
