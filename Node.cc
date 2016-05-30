@@ -48,6 +48,16 @@ Node::Node(const Node& n){
         beforeAction = n.beforeAction;
 }
 
+bool Node::isGoal()const{
+        for(int i=0;i<3;i++){
+                for(int j=0;j<3;j++){
+                        if(state[i][j]!=3*i+j)
+                                return false;
+                }
+        }
+        return true;
+}
+
 //This is a kind of Hash fucntion for index
 int Node::stateToInt()const{
         return state[0][0]*100000000 + 

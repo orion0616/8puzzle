@@ -94,16 +94,6 @@ Node randomize(Node& n){
         return moved;
 }
 
-bool isGoal(Node n){
-        for(int i=0;i<3;i++){
-                for(int j=0;j<3;j++){
-                        if(n.state[i][j]!=3*i+j)
-                                return false;
-                }
-        }
-        return true;
-}
-
 void addToOpenList(Node& n){
         int num;
         //the same state in closedList;
@@ -220,7 +210,7 @@ void astar(Node& n){
         while(!openList.empty()){
                 node = openList.findMin();
                 openList.remove();
-                if(isGoal(*node)){
+                if(node->isGoal()){
                         printResult(*node);
                         return;
                 }

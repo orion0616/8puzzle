@@ -19,6 +19,7 @@ public:
         int pathCost()const;
         int heuristic()const;
         int evalF()const;
+        bool isGoal()const;
 
         //Operator
         Node& operator=(const Node& x);
