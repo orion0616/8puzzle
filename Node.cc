@@ -4,11 +4,11 @@
 
 using namespace std;
 
-int manhattanDistance(Node n){
+int Node::manhattanDistance()const{
         int count = 0;
         for(int i=0;i<3;i++){
                 for(int j=0;j<3;j++){
-                        int k = n.state[i][j];
+                        int k = state[i][j];
                         if(k==0)
                                 continue;
                         int p = k/3;
@@ -78,12 +78,8 @@ int Node::pathCost()const{
                 return parentNode->pathCost()+1;
 }
 
-int Node::heuristic()const{
-        return manhattanDistance(*this);
-}
-
 int Node::evalF()const{
-        return pathCost() + heuristic();
+        return pathCost() + manhattanDistance();
 }
 
 
@@ -111,4 +107,61 @@ bool Node::operator==(const Node& y)const{
                 }
         }
         return ans;
+}
+
+Node moveDown(Node& n){
+        pair<int,int> empty = whereEmpty(n);
+        int emptyI = empty.first;
+        int emptyJ = empty.second;
+        if(emptyI==2)
+                return n;
+        Node after = n;
+        after.state[emptyI+1][emptyJ] = n.state[emptyI][emptyJ];
+        after.state[emptyI][emptyJ] = n.state[emptyI+1][emptyJ];
+        after.beforeAction = 'D';
+        after.parentNode = &n;
+        return after;
+}
+
+Node moveUp(Node& n){
+        pair<int,int> empty = whereEmpty(n);
+        int emptyI = empty.first;
+        int emptyJ = empty.second;
+        if(emptyI==0)
+                return n;
+        Node after = n;
+        after.state[emptyI-1][emptyJ] = n.state[emptyI][emptyJ];
+        after.state[emptyI][emptyJ] = n.state[emptyI-1][emptyJ];
+        after.beforeAction = 'U';
+        after.parentNode = &n;
+        return after;
+}
+
+Node moveLeft(Node& n){
+        pair<int,int> empty = whereEmpty(n);
+        int emptyI = empty.first;
+        int emptyJ = empty.second;
+        if(emptyJ==0)
+                return n;
+        Node after = n;
+        after.state[emptyI][emptyJ-1] = n.state[emptyI][emptyJ];
+        after.state[emptyI][emptyJ] = n.state[emptyI][emptyJ-1];
+        after.beforeAction = 'L';
+        after.parentNode = &n;
+        return after;
+}
+
+Node moveRight(Node& n){
+        pair<int,int> empty = whereEmpty(n);
+        int emptyI = empty.first;
+        int emptyJ = empty.second;
+        if(emptyJ==2)
+                return n;
+        Node after = n;
+        after.state[emptyI][emptyJ+1] = n.state[emptyI][emptyJ];
+        after.state[emptyI][emptyJ] = n.state[emptyI][emptyJ+1];
+
+        after.beforeAction = 'R';
+        after.parentNode = &n;
+        return after;
 }

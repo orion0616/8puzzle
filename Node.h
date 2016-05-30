@@ -17,7 +17,7 @@ public:
         //Function
         int stateToInt()const;
         int pathCost()const;
-        int heuristic()const;
+        int manhattanDistance()const;
         int evalF()const;
         bool isGoal()const;
 
@@ -27,8 +27,11 @@ public:
         bool operator==(const Node& y)const;
 };
 
-int manhattanDistance(Node n);
-
 std::pair<int,int> whereEmpty(Node n);
+
+Node moveDown(Node& n);
+Node moveUp(Node& n);
+Node moveLeft(Node& n);
+Node moveRight(Node& n);
 
 #endif

@@ -17,64 +17,7 @@ using namespace std;
 NodeBinaryHeap openList;
 unordered_map<int,Node*> closedList;
 
-Node moveDown(Node& n){
-        pair<int,int> empty = whereEmpty(n);
-        int emptyI = empty.first;
-        int emptyJ = empty.second;
-        if(emptyI==2)
-                return n;
-        Node after = n;
-        after.state[emptyI+1][emptyJ] = n.state[emptyI][emptyJ];
-        after.state[emptyI][emptyJ] = n.state[emptyI+1][emptyJ];
-        after.beforeAction = 'D';
-        after.parentNode = &n;
-        return after;
-}
-
-Node moveUp(Node& n){
-        pair<int,int> empty = whereEmpty(n);
-        int emptyI = empty.first;
-        int emptyJ = empty.second;
-        if(emptyI==0)
-                return n;
-        Node after = n;
-        after.state[emptyI-1][emptyJ] = n.state[emptyI][emptyJ];
-        after.state[emptyI][emptyJ] = n.state[emptyI-1][emptyJ];
-        after.beforeAction = 'U';
-        after.parentNode = &n;
-        return after;
-}
-
-Node moveLeft(Node& n){
-        pair<int,int> empty = whereEmpty(n);
-        int emptyI = empty.first;
-        int emptyJ = empty.second;
-        if(emptyJ==0)
-                return n;
-        Node after = n;
-        after.state[emptyI][emptyJ-1] = n.state[emptyI][emptyJ];
-        after.state[emptyI][emptyJ] = n.state[emptyI][emptyJ-1];
-        after.beforeAction = 'L';
-        after.parentNode = &n;
-        return after;
-}
-
-Node moveRight(Node& n){
-        pair<int,int> empty = whereEmpty(n);
-        int emptyI = empty.first;
-        int emptyJ = empty.second;
-        if(emptyJ==2)
-                return n;
-        Node after = n;
-        after.state[emptyI][emptyJ+1] = n.state[emptyI][emptyJ];
-        after.state[emptyI][emptyJ] = n.state[emptyI][emptyJ+1];
-
-        after.beforeAction = 'R';
-        after.parentNode = &n;
-        return after;
-}
-
-Node randomize(Node& n){
+Node randomMove(Node& n){
         random_device rnd;
         int num = rnd()%4;
         Node moved;
@@ -238,7 +181,7 @@ void createProblems(vector<Node>& problems, int num){
         for(int i=0;i<num;i++){
                 Node n;
                 for(int j=0;j<100;j++){
-                        n = randomize(n);
+                        n = randomMove(n);
                 }
                 n.beforeAction = '\0';
                 n.parentNode = NULL;
