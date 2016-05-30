@@ -128,6 +128,20 @@ void addToOpenList(Node& n){
         return;
 }
 
+void moveandAdd(Node& n, string direction){
+        Node* next = new Node();
+        if(direction == "Down")
+                *next = moveDown(n);
+        if(direction == "Up")
+                *next = moveUp(n);
+        if(direction == "Left")
+                *next = moveLeft(n);
+        if(direction == "Right")
+                *next = moveRight(n);
+        addToOpenList(*next);
+        return;
+}
+
 void addChild(Node& n){
         pair<int,int> empty = whereEmpty(n);
         int emptyI = empty.first;
@@ -135,99 +149,51 @@ void addChild(Node& n){
         //角
         if((emptyI == 0 || emptyI == 2) && (emptyJ == 0 || emptyJ == 2)){
                 if(emptyI== 0 && emptyJ==0){
-                        Node* a = new Node();
-                        Node* b = new Node();
-                        *a = moveDown(n);
-                        *b = moveRight(n);
-                        addToOpenList(*a);
-                        addToOpenList(*b);
+                        moveandAdd(n,"Down");
+                        moveandAdd(n,"Right");
                 }
                 else if(emptyI==0 && emptyJ==2){
-                        Node* a = new Node();
-                        Node* b = new Node();
-                        *a = moveDown(n);
-                        *b = moveLeft(n);
-                        addToOpenList(*a);
-                        addToOpenList(*b);
+                        moveandAdd(n,"Down");
+                        moveandAdd(n,"Left");
                 }
                 else if(emptyI==2 && emptyJ==0){
-                        Node* a = new Node();
-                        Node* b = new Node();
-                        *a = moveUp(n);
-                        *b = moveRight(n);
-                        addToOpenList(*a);
-                        addToOpenList(*b);
+                        moveandAdd(n,"Up");
+                        moveandAdd(n,"Right");
                 }
                 else{
-                        Node* a = new Node();
-                        Node* b = new Node();
-                        *a = moveUp(n);
-                        *b = moveLeft(n);
-                        addToOpenList(*a);
-                        addToOpenList(*b);
+                        moveandAdd(n,"Up");
+                        moveandAdd(n,"Left");
                 }
         }
         //角を除く辺上
         else if(emptyI == 0 || emptyI == 2 || emptyJ == 0 || emptyJ == 2){
                 if(emptyI==0){
-                        Node* a = new Node();
-                        Node* b = new Node();
-                        Node* c = new Node();
-                        *a = moveDown(n);
-                        *b = moveLeft(n);
-                        *c = moveRight(n);
-                        addToOpenList(*a);
-                        addToOpenList(*b);
-                        addToOpenList(*c);
+                        moveandAdd(n,"Down");
+                        moveandAdd(n,"Left");
+                        moveandAdd(n,"Right");
                 }
                 else if(emptyI==2){
-                        Node* a = new Node();
-                        Node* b = new Node();
-                        Node* c = new Node();
-                        *a = moveUp(n);
-                        *b = moveLeft(n);
-                        *c = moveRight(n);
-                        addToOpenList(*a);
-                        addToOpenList(*b);
-                        addToOpenList(*c);
+                        moveandAdd(n,"Up");
+                        moveandAdd(n,"Left");
+                        moveandAdd(n,"Right");
                 }
                 else if(emptyJ==0){
-                        Node* a = new Node();
-                        Node* b = new Node();
-                        Node* c = new Node();
-                        *a = moveDown(n);
-                        *b = moveUp(n);
-                        *c = moveRight(n);
-                        addToOpenList(*a);
-                        addToOpenList(*b);
-                        addToOpenList(*c);
+                        moveandAdd(n,"Down");
+                        moveandAdd(n,"Up");
+                        moveandAdd(n,"Right");
                 }
                 else{
-                        Node* a = new Node();
-                        Node* b = new Node();
-                        Node* c = new Node();
-                        *a = moveDown(n);
-                        *b = moveUp(n);
-                        *c = moveLeft(n);
-                        addToOpenList(*a);
-                        addToOpenList(*b);
-                        addToOpenList(*c);
+                        moveandAdd(n,"Down");
+                        moveandAdd(n,"Up");
+                        moveandAdd(n,"Left");
                 }
         }
         //それ以外
         else{
-                Node* a = new Node();
-                Node* b = new Node();
-                Node* c = new Node();
-                Node* d = new Node();
-                *a = moveDown(n);
-                *b = moveUp(n);
-                *c = moveLeft(n);
-                *d = moveRight(n);
-                addToOpenList(*a);
-                addToOpenList(*b);
-                addToOpenList(*c);
-                addToOpenList(*d);
+                moveandAdd(n,"Down");
+                moveandAdd(n,"Up");
+                moveandAdd(n,"Left");
+                moveandAdd(n,"Right");
         }
         return;
 }
