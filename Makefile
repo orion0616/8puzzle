@@ -4,7 +4,7 @@ OBJS = 8puzzle.o NodeBinaryHeap.o Node.o
 8puzzle: $(OBJS)
 	$(CXX) -Wall -O2 -o $@ $(OBJS)
 
-.cc.oo:
+.cc.o:
 	$(CXX) -c $<
 
 8puzzle.cc: BinaryHeap.h NodeBinaryHeap.h Node.h
