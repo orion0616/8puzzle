@@ -4,13 +4,13 @@
 #include "Node.h"
 #include "BinaryHeap.h"
 
-class NodeBinaryHeap : public BinaryHeap<Node*>{
+class NodeBinaryHeap : public BinaryHeap<Node*> {
 public:
-        bool add(Node* x);
-        void bubbleUp(int i);
-        void trickleDown(int i);
-        Node* remove();
-        int find(int i);
+    bool add(Node* x);
+    void bubbleUp(int i);
+    void trickleDown(int i);
+    Node* remove();
+    int find(int i);
 };
 
 #endif
